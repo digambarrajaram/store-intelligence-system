@@ -294,10 +294,10 @@ services:
     deploy:
       resources:
         reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]   # comment out if no GPU
+           # devices:
+           #   - driver: nvidia
+           #     count: all
+           #   # capabilities: [gpu]   # comment out if no GPU
 
   # ──────────────────────────────────────────────
   # LAYER 2 — OBSERVABILITY: React Dashboard

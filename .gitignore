@@ -1,0 +1,94 @@
+# .gitignore for CV Pipeline
+
+# Dependencies
+node_modules/
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.model_cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Docker
+docker-compose.override.yml
+.docker/
+# Ignore built container images
+# (if you were building and saving images locally, but we aren't in this repo)
+
+# Video files (large, not for commit)
+videos/
+# Note: we keep the directory but ignore contents
+# If you want to track the directory structure, uncomment the next line and add a .gitkeep inside videos/
+# !videos/.gitkeep
+
+# Model files (if stored locally, but we use a volume)
+models/
+# Ignore any .pt or .onnx model files
+*.pt
+*.onnx
+
+# Output directories (if used locally, but we use volumes)
+output/
+detection_output/
+
+# Miscellaneous
+*.exe
+*.tmp
+*.temp
+.cache/
+tmp/
+temp/
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.noxtestresults/
+.node_replay_history
+
+# Package files (if you ever package the project)
+*.tar
+*.tar.gz
+*.zip
+
+# Environment variables (keep the template if you have one, but ignore actual values)
+# .env.example  # uncomment this line if you want to keep an example
+
+# Kafka data (if stored locally, but we use a volume)
+kafka_data/
+zookeeper_data/
+zookeeper_log/
+redis_data/
+
+# Grafana (if you store dashboards or provisioning locally, but we use volumes and bind-mounts)
+# We are bind-mounting, so we want to keep the infra/ directory but ignore any local caches
+# No specific ignores for infra/ because we want to keep the configuration files
+
+# Prometheus data (if stored locally, but we use a volume)
+# prometheus/  # we don't have a prometheus directory in the repo, but if we did, we'd ignore it
+
+# End of file
