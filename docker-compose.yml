@@ -1,5 +1,3 @@
-version: "3.9"
-
 # ╔══════════════════════════════════════════════════════════════════╗
 # ║         CV PIPELINE — FAANG-STYLE DOCKER COMPOSE               ║
 # ║         Kafka · Redis · FastAPI · YOLOv8 · React Dashboard     ║
@@ -36,7 +34,7 @@ volumes:
   zookeeper_log:
   redis_data:
   model_cache:
-  video_input:
+
   detection_output:
 
 services:
@@ -211,7 +209,6 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile
-      target: development
     container_name: cv_api
     <<: *always-restart
     logging: *default-logging
@@ -288,16 +285,10 @@ services:
       FRAME_SKIP: "3"                 # process every Nth frame
     volumes:
       - ./worker:/app
-      - video_input:/videos           # place your .mp4 here
+      - ./videos:/videos           # place your .mp4 here
       - model_cache:/models
       - detection_output:/output
-    deploy:
-      resources:
-        reservations:
-           # devices:
-           #   - driver: nvidia
-           #     count: all
-           #   # capabilities: [gpu]   # comment out if no GPU
+
 
   # ──────────────────────────────────────────────
   # LAYER 2 — OBSERVABILITY: React Dashboard
@@ -311,7 +302,6 @@ services:
     build:
       context: ./dashboard
       dockerfile: Dockerfile
-      target: development
     container_name: cv_dashboard
     <<: *always-restart
     logging: *default-logging
