@@ -24,6 +24,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Prometheus instrumentation
+Instrumentator().instrument(app).expose(app)
+
 # Redis connection setup
 @app.on_event("startup")
 async def startup_event():
@@ -41,9 +44,6 @@ async def startup_event():
     
     # Initialize WebSocket components
     init_websocket(app)
-    
-    # Start Prometheus instrumentation
-    Instrumentator().instrument(app).expose(app)
 
 @app.on_event("shutdown")
 async def shutdown_event():
