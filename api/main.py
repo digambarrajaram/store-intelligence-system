@@ -5,6 +5,7 @@ from redis import asyncio as aioredis  # Native Redis asyncio module
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_fastapi_instrumentator import Instrumentator
+from kafka_consumer import consume_kafka
 
 from websocket import (
     init_websocket,
@@ -76,6 +77,11 @@ async def startup_event():
     
     # 🟢 FIXED: Removed "await" because init_websocket is a regular synchronous function
     init_websocket(app)
+
+    app.state.kafka_task = asyncio.create_task(
+        consume_kafka(app)
+    )
+
     print("Application startup sequence finalized.")
 
 @app.on_event("shutdown")
