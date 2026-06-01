@@ -22,7 +22,7 @@ from prometheus_fastapi_instrumentator import Instrumentator
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings
 
-from routers import analytics, debug, insights, pos
+from api.routers import analytics, debug, insights, pos
 from api import websocket  # Our new WebSocket module
 
 
