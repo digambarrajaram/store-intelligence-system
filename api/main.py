@@ -6,6 +6,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_fastapi_instrumentator import Instrumentator
 
+from websocket import (
+    init_websocket,
+    router as websocket_router,
+    ws_router
+)
+
 # 🟢 FIXED: Use relative imports to prevent ModuleNotFoundError inside the container
 # 🟢 FIXED: Change from relative (.) to absolute imports
 from websocket import init_websocket
@@ -33,6 +39,8 @@ Instrumentator().instrument(app).expose(app)
 app.include_router(analytics.router, prefix="/api/v1")
 app.include_router(insights.router, prefix="/api/v1")
 app.include_router(pos.router, prefix="/api/v1")
+app.include_router(websocket_router, prefix="/api/v1")
+app.include_router(ws_router)
 
 # 4. Mandatory Health Check Route (Fixes Docker Compose 404 Unhealthy Crash)
 @app.get("/health")
