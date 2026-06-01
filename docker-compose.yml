@@ -81,9 +81,7 @@ services:
       - store-net
 
   api:
-    build:
-      context: ./dashboard
-      dockerfile: Dockerfile
+    image: digya285/store-intelligence-api:latest
     hostname: api
     container_name: api
     restart: unless-stopped
@@ -109,9 +107,7 @@ services:
       - store-net
 
   worker:
-    build:
-      context: ./dashboard
-      dockerfile: Dockerfile
+    image: digya285/store-intelligence-worker:latest
     hostname: worker
     container_name: worker
     restart: unless-stopped
@@ -143,9 +139,7 @@ services:
       - store-net
 
   dashboard:
-    build:
-      context: ./dashboard
-      dockerfile: Dockerfile
+    image: digya285/store-intelligence-dashboard:latest
     hostname: dashboard
     container_name: dashboard
     restart: unless-stopped
@@ -167,9 +161,7 @@ services:
       - store-net
 
   prometheus:
-    build:
-      context: ./dashboard
-      dockerfile: Dockerfile
+    image: prom/prometheus:latest
     hostname: prometheus
     container_name: prometheus
     restart: unless-stopped
@@ -196,9 +188,7 @@ services:
       - store-net
 
   grafana:
-    build:
-      context: ./dashboard
-      dockerfile: Dockerfile
+    image: grafana/grafana:latest
     hostname: grafana
     container_name: grafana
     restart: unless-stopped
