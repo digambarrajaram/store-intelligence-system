@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from 'recharts';
 import { usePolling } from '../hooks/usePolling';
 import { OccupancyData } from '../types/api';
@@ -13,10 +13,19 @@ const fetchOccupancyData = async (): Promise<OccupancyData[]> => {
   console.log('[OccupancyChart] API Response:', {
     status: response.status,
     payload,
-      historyCount: Array.isArray(payload) ? payload.length : 0,
-      sampleData: Array.isArray(payload) ? payload[0] : undefined
-    });
-    return Array.isArray(payload) ? payload : [];
+    historyCount: Array.isArray(payload) ? payload.length : 0,
+    sampleData: Array.isArray(payload) ? payload[0] : undefined,
+  });
+  return Array.isArray(payload) ? payload : [];
+};
+
+export const OccupancyChart = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { data, error, isLoading } = usePolling<OccupancyData[]>(fetchOccupancyData, 30000, {
+    immediate: true,
+  });
+
+  React.useEffect(() => {
     if (data && data.length > 0) {
       console.log('[OccupancyChart] Data loaded successfully:', {
         count: data.length,
