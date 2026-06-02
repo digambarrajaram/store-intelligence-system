@@ -108,6 +108,7 @@ state = AppState()
 async def lifespan(app: FastAPI):
     # startup
     state.redis = aioredis.from_url(settings.redis_url, decode_responses=True)
+    app.state.redis = state.redis
     state.kafka_producer = AIOKafkaProducer(
         bootstrap_servers=settings.kafka_bootstrap_servers,
         value_serializer=lambda v: json.dumps(v).encode(),
