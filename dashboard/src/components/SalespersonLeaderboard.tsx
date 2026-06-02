@@ -5,7 +5,7 @@ import { SalespersonData } from '../types/api';
 const fetchSalespersonData = async (): Promise<SalespersonData[]> => {
   // Get today's date in YYYY-MM-DD format
   const today = new Date().toISOString().split('T')[0];
-  const apiUrl = import.meta.env.REACT_APP_API_URL ? import.meta.env.REACT_APP_API_URL.trim() : '/api/v1';
+  const apiUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.trim() : '/api/v1';
   const response = await fetch(`${apiUrl}/insights/salesperson?date=${today}`);
   if (!response.ok) {
     throw new Error('Failed to fetch salesperson data');

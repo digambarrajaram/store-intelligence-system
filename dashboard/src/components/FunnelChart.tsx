@@ -1,10 +1,10 @@
 import React from 'react';
-import { FunnelChart, Funnel, Tooltip, ResponsiveContainer, Label } from 'recharts';
+import { FunnelChart as RechartsFunnelChart, Funnel, Tooltip, ResponsiveContainer, Label } from 'recharts';
 import { usePolling } from '../hooks/usePolling';
 import { FunnelData } from '../types/api';
 
 const fetchFunnelData = async (): Promise<FunnelData[]> => {
-  const apiUrl = import.meta.env.REACT_APP_API_URL ? import.meta.env.REACT_APP_API_URL.trim() : '/api/v1';
+  const apiUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.trim() : '/api/v1';
   const response = await fetch(`${apiUrl}/funnel`);
   if (!response.ok) {
     throw new Error('Failed to fetch funnel data');
@@ -47,14 +47,14 @@ export const FunnelChart = () => {
 
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <FunnelChart data={data}>
+      <RechartsFunnelChart data={data}>
         <Tooltip />
         <Label
           position="insideLeft"
           formatter={(value, name) => `${name}: ${value}`}
         />
         <Funnel dataKey="value" nameKey="step" />
-      </FunnelChart>
+      </RechartsFunnelChart>
     </ResponsiveContainer>
   );
 };

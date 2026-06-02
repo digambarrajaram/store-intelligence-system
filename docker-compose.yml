@@ -139,6 +139,12 @@ services:
       - store-net
 
   dashboard:
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:-}
+        VITE_WS_URL: ${VITE_WS_URL:-}
     image: digya285/store-intelligence-dashboard:latest
     hostname: dashboard
     container_name: dashboard
@@ -149,8 +155,8 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - REACT_APP_API_URL=http://localhost:8000
-      - REACT_APP_WS_URL=ws://localhost:8000
+      - VITE_API_URL=
+      - VITE_WS_URL=
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
       interval: 30s

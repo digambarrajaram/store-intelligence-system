@@ -4,7 +4,7 @@ import { usePolling } from '../hooks/usePolling';
 import { OccupancyData } from '../types/api';
 
 const fetchOccupancyData = async (): Promise<OccupancyData[]> => {
-  const apiUrl = import.meta.env.REACT_APP_API_URL ? import.meta.env.REACT_APP_API_URL.trim() : '/api/v1';
+  const apiUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.trim() : '/api/v1';
   const response = await fetch(`${apiUrl}/metrics?window_minutes=60`);
   if (!response.ok) {
     throw new Error('Failed to fetch occupancy data');

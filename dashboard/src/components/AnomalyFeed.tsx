@@ -4,7 +4,10 @@ import { Alert } from '../types/api';
 import { useEffect, useRef, useState } from 'react';
 
 export const AnomalyFeed = () => {
-  const wsUrl = import.meta.env.REACT_APP_WS_URL || 'ws://localhost:8000';
+  const rawWsUrl = import.meta.env.VITE_WS_URL?.trim();
+  const wsUrl = rawWsUrl
+    ? rawWsUrl.replace(/\/$/, '')
+    : `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}`;
   const { data: alertData, error, isConnected } = useWebSocket<Alert>(`${wsUrl}/ws/alerts`);
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);

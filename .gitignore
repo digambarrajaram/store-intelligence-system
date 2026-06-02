@@ -84,9 +84,7 @@ zookeeper_data/
 zookeeper_log/
 redis_data/
 
-# Grafana (if you store dashboards or provisioning locally, but we use volumes and bind-mounts)
-# We are bind-mounting, so we want to keep the infra/ directory but ignore any local caches
-# No specific ignores for infra/ because we want to keep the configuration files
+# Grafana provisioning is bind-mounted into containers, so local config is not tracked here
 
 # Prometheus data (if stored locally, but we use a volume)
 # prometheus/  # we don't have a prometheus directory in the repo, but if we did, we'd ignore it
