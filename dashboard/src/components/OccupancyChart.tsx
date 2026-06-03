@@ -5,18 +5,19 @@ import { OccupancyData } from '../types/api';
 
 const fetchOccupancyData = async (): Promise<OccupancyData[]> => {
   const apiUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.trim() : '/api/v1';
-  const response = await fetch(`${apiUrl}/occupancy/history?window_minutes=60&interval_minutes=5`);
+  const response = await fetch(`${apiUrl}/analytics/occupancy/history?window_minutes=60&interval_minutes=5`);
   if (!response.ok) {
     throw new Error('Failed to fetch occupancy data');
   }
   const payload = await response.json();
+  const history = payload?.history || (Array.isArray(payload) ? payload : []);
   console.log('[OccupancyChart] API Response:', {
     status: response.status,
     payload,
-    historyCount: Array.isArray(payload) ? payload.length : 0,
-    sampleData: Array.isArray(payload) ? payload[0] : undefined,
+    historyCount: history.length,
+    sampleData: history[0],
   });
-  return Array.isArray(payload) ? payload : [];
+  return history;
 };
 
 export const OccupancyChart = () => {

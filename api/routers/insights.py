@@ -67,6 +67,6 @@ async def get_salesperson_leaderboard(
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid date format. Expected YYYY-MM-DD")
 
-    r: Redis = request.app.state.sync_redis
-    ranking = TransactionImporter(store_id=store_id).get_salesperson_ranking(r, date)
+    r: Redis = request.app.state.redis
+    ranking = await TransactionImporter(store_id=store_id).get_salesperson_ranking(r, date)
     return ranking or []

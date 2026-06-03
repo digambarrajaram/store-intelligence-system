@@ -4,7 +4,7 @@ import { KPIData } from '../types/api';
 
 const fetchKPIData = async (): Promise<KPIData> => {
   const apiUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.trim() : '/api/v1';
-  const response = await fetch(`${apiUrl}/kpis`);
+  const response = await fetch(`${apiUrl}/analytics/kpis`);
   if (!response.ok) {
     throw new Error('Failed to fetch KPI data');
   }

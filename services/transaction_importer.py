@@ -135,8 +135,8 @@ class TransactionImporter:
             'aggregates': aggregates
         }
 
-    def get_salesperson_ranking(self, redis_client, date: str) -> List[Dict[str, Any]]:
-        transactions_hash = redis_client.hgetall(self._pos_key(date))
+    async def get_salesperson_ranking(self, redis_client, date: str) -> List[Dict[str, Any]]:
+        transactions_hash = await redis_client.hgetall(self._pos_key(date))
         if not transactions_hash:
             return []
 

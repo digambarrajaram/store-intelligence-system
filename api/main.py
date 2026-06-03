@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from prometheus_client import make_asgi_app
 
 from api.routers import analytics, insights, pos, debug
+from api.websocket import ws_router, init_websocket, cleanup_websocket
 from api.kafka_consumer import consume_kafka
 
 logging.basicConfig(level=logging.INFO)
@@ -58,6 +59,9 @@ async def lifespan(app: FastAPI):
 
     # Start Kafka consumer
     task = asyncio.create_task(consume_kafka(app))
+
+    # Initialize WebSocket
+    init_websocket(app)
     logger.info("Application startup complete")
 
     yield
@@ -68,6 +72,7 @@ async def lifespan(app: FastAPI):
         await task
     except asyncio.CancelledError:
         pass
+    await cleanup_websocket(app)
     await app.state.redis.close()
     logger.info("Application shutdown complete")
 
@@ -97,6 +102,9 @@ app.include_router(analytics.router, prefix="/api/v1")
 app.include_router(insights.router, prefix="/api/v1")
 app.include_router(pos.router, prefix="/api/v1")
 app.include_router(debug.router, prefix="/api/v1")
+
+# WebSocket router (mounted without prefix since it has its own path)
+app.include_router(ws_router)
 
 
 @app.get("/health")

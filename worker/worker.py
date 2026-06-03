@@ -209,7 +209,7 @@ async def main():
 
     fps = cap.get(cv2.CAP_PROP_FPS) or 25.0 if cap else 25.0
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)) if cap else 640
-    height = int(cap.get(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))) if cap else 480
+    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)) if cap else 480
     if cap:
         print(f"Video opened: {video_path} ({width}x{height} @ {fps:.1f}fps)")
     else:

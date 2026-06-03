@@ -26,16 +26,18 @@ const normalizeFunnelResponse = (payload: any): FunnelData[] => {
 
 const fetchFunnelData = async (): Promise<FunnelData[]> => {
   const apiUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.trim() : '/api/v1';
-  const response = await fetch(`${apiUrl}/funnel`);
+  const response = await fetch(`${apiUrl}/analytics/funnel`);
   if (!response.ok) {
     throw new Error('Failed to fetch funnel data');
   }
   const payload = await response.json();
+  const funnel = payload?.funnel || (Array.isArray(payload) ? payload : []);
   console.log('[FunnelChart] API Response:', {
     status: response.status,
     payload,
+    funnel,
   });
-  return normalizeFunnelResponse(payload);
+  return normalizeFunnelResponse(funnel);
 };
 
 const FUNNEL_COLORS = ['#06b6d4', '#0891b2', '#0e7490', '#164e63'];
