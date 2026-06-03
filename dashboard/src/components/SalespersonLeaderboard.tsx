@@ -3,8 +3,10 @@ import { usePolling } from '../hooks/usePolling';
 import { SalespersonData } from '../types/api';
 
 const fetchSalespersonData = async (): Promise<SalespersonData[]> => {
-  // Get today's date in YYYY-MM-DD format
-  const today = new Date().toISOString().split('T')[0];
+  // Get today's date in YYYY-MM-DD format using LOCAL timezone
+  // toISOString() returns UTC date which can be off by a day for timezones like Asia/Calcutta (UTC+5:30)
+  const now = new Date();
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
   const apiUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.trim() : '/api/v1';
   const response = await fetch(`${apiUrl}/insights/salesperson?date=${today}`);
   if (!response.ok) {

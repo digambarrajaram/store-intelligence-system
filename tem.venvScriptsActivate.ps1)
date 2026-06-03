@@ -1,0 +1,13 @@
+[1mdiff --git a/dashboard/src/components/KPICards.tsx b/dashboard/src/components/KPICards.tsx[m
+[1mindex d8fd30a..1886a3d 100644[m
+[1m--- a/dashboard/src/components/KPICards.tsx[m
+[1m+++ b/dashboard/src/components/KPICards.tsx[m
+[36m@@ -4,7 +4,7 @@[m [mimport { KPIData } from '../types/api';[m
+ [m
+ const fetchKPIData = async (): Promise<KPIData> => {[m
+   const apiUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.trim() : '/api/v1';[m
+[31m-  const response = await fetch(`${apiUrl}/analytics/kpis`);[m
+[32m+[m[32m  const response = await fetch(`${apiUrl}/kpis`);[m
+   if (!response.ok) {[m
+     throw new Error('Failed to fetch KPI data');[m
+   }[m

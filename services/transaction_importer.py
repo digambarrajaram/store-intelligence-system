@@ -136,16 +136,44 @@ class TransactionImporter:
         }
 
     async def get_salesperson_ranking(self, redis_client, date: str) -> List[Dict[str, Any]]:
-        transactions_hash = await redis_client.hgetall(self._pos_key(date))
-        if not transactions_hash:
-            return []
-
+        key = self._pos_key(date)
         transactions = []
-        for value in transactions_hash.values():
-            try:
-                transactions.append(json.loads(value))
-            except json.JSONDecodeError:
-                continue
+
+        # Check key type to determine how to read the data
+        key_type = await redis_client.type(key)
+        key_type_str = key_type.decode() if isinstance(key_type, bytes) else str(key_type)
+
+        if key_type_str == 'hash':
+            # Normal case: data stored as hash of order_id -> JSON transaction
+            transactions_hash = await redis_client.hgetall(key)
+            if not transactions_hash:
+                print(f"Salesperson ranking: key {key} exists as hash but has no fields")
+                return []
+            for value in transactions_hash.values():
+                try:
+                    transactions.append(json.loads(value))
+                except json.JSONDecodeError:
+                    continue
+        elif key_type_str == 'string':
+            # Fallback: data stored as a single JSON blob (array of transactions)
+            print(f"Salesperson ranking: key {key} is string type, attempting JSON parse")
+            raw = await redis_client.get(key)
+            if raw:
+                try:
+                    parsed = json.loads(raw)
+                    if isinstance(parsed, list):
+                        transactions = parsed
+                    elif isinstance(parsed, dict):
+                        transactions = [parsed]
+                except json.JSONDecodeError:
+                    print(f"Salesperson ranking: key {key} is string but not valid JSON")
+                    return []
+        elif key_type_str == 'none':
+            print(f"Salesperson ranking: key {key} does not exist in Redis")
+            return []
+        else:
+            print(f"Salesperson ranking: key {key} has unexpected type {key_type_str}")
+            return []
 
         if not transactions:
             return []
