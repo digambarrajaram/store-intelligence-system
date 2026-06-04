@@ -1,10 +1,12 @@
+import sys
+sys.path.insert(0, '/app')
+
 # NOTE: Add redis-tools to Dockerfile apt-get install for healthcheck to work.
 import os
 import cv2
 import json
 import time
 import signal
-import sys
 import asyncio
 import redis as redis_client
 from aiokafka import AIOKafkaProducer
