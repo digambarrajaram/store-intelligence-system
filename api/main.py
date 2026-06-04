@@ -57,6 +57,20 @@ async def lifespan(app: FastAPI):
             await app.state.redis.set(f"store:{store_id}:camera:{camera_id}:anomaly_count", 0)
             logger.info(f"Initialized metrics for {store_id}/{camera_id}")
 
+    # Auto-seed salesperson data on startup
+    try:
+        import subprocess
+        result = subprocess.run(
+            ["python", "/app/worker/seed_salesperson.py"],
+            capture_output=True, text=True, timeout=30
+        )
+        if result.returncode == 0:
+            logger.info(f"Salesperson data seeded: {result.stdout.strip()}")
+        else:
+            logger.warning(f"Salesperson seed failed: {result.stderr.strip()}")
+    except Exception as exc:
+        logger.warning(f"Salesperson seed error: {exc}")
+
     # Start Kafka consumer
     task = asyncio.create_task(consume_kafka(app))
 
