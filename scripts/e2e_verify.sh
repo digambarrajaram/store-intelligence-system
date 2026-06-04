@@ -4,7 +4,7 @@
 #  Tests backend APIs, video pipeline data flow, frontend build
 #  Verifies video workers produce non-zero data for dashboard
 # ============================================================
-set -euo pipefail
+# No set -e — this is a diagnostic script; individual checks should not abort the whole run
 
 API_URL="${1:-http://localhost:8000}"
 DASHBOARD_URL="${2:-http://localhost:3000}"
