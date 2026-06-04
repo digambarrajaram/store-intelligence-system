@@ -13,8 +13,8 @@ An AI-powered retail analytics platform that processes CCTV video streams to del
 
 ## Quick Start
 ```bash
-git clone https://github.com/your-username/store-intelligence-system.git
-cd store-intelligence-system
+git clone https://github.com/digambarrajaram/Store-Intelligence-System-AI-Powered-Retail-Analytics-Platform.git
+cd Store-Intelligence-System-AI-Powered-Retail-Analytics-Platform
 cp .env.example .env
 docker compose up -d
 curl http://localhost:8000/health
@@ -107,35 +107,117 @@ tests/test_*.py ........                                                        
 ## Project Structure
 ```
 store-intelligence-system/
-├── api/                      # FastAPI backend service
-│   ├── main.py               # App entry point with /health endpoint
-│   ├── metrics.py            # Prometheus metrics definitions
-│   ├── websocket.py          # WebSocket connection manager and /ws/alerts
-│   ├── routers/              # API route modules
-│   │   ├── analytics.py      # /metrics, /funnel
-│   │   ├── insights.py       # /insights/correlation, /insights/salesperson
-│   │   ├── pos.py            # /pos/ingest
-│   │   └── debug.py          # Debug endpoints (if any)
-│   ├── middleware/           # Custom middleware (logging)
-│   ├── Dockerfile            # Container definition for API
-│   └── requirements.txt      # Python dependencies
-├── worker/                   # Video processing service (YOLOv8+ByteTrack → Kafka)
-│   ├── worker.py             # Main processing loop
-│   ├── metrics.py            # Prometheus metrics for worker
+├── api/                          # FastAPI backend service
+│   ├── __init__.py
+│   ├── main.py                   # App entry point with /health endpoint
+│   ├── metrics.py                # Prometheus metrics definitions
+│   ├── websocket.py              # WebSocket connection manager and /ws/alerts
+│   ├── kafka_consumer.py         # Kafka consumer for detection events
+│   ├── routers/                  # API route modules
+│   │   ├── analytics.py          # /metrics, /funnel
+│   │   ├── insights.py           # /insights/correlation, /insights/salesperson
+│   │   ├── pos.py                # /pos/ingest
+│   │   └── debug.py              # Debug endpoints (if any)
+│   ├── middleware/               # Custom middleware (logging)
+│   ├── Dockerfile                # Container definition for API
+│   └── requirements.txt          # Python dependencies
+├── worker/                       # Video processing service (YOLOv8+ByteTrack → Kafka)
+│   ├── __init__.py
+│   ├── worker.py                 # Main processing loop
+│   ├── metrics.py                # Prometheus metrics for worker
+│   ├── seed_salesperson.py       # Seeds salesperson data
 │   ├── Dockerfile
 │   └── requirements.txt
-├── detection/                # Anomaly detection service (Kafka → Redis)
-│   ├── anomaly_detector.py   # FastAPI app with /api/v1/anomalies + detection logic
-│   ├── test_anomaly_detector.py
-│   └── requirements.txt
-├── dashboard/                # React frontend (Vite)
-│   ├── src/                  # Source code (components, hooks)
+├── detection/                    # Anomaly detection module
+│   ├── __init__.py
+│   └── anomaly_detector.py       # Isolation Forest-based anomaly detection
+├── events/                       # Event publishing & schema definitions
+│   ├── __init__.py
+│   ├── publisher.py              # Event publisher to Kafka/Redis
+│   └── schema.py                 # Event schema definitions
+├── services/                     # Business logic services
+│   ├── __init__.py
+│   ├── alert_engine.py           # Alert generation and management
+│   ├── conversion_engine.py      # Conversion funnel computation
+│   ├── event_store.py            # Event storage and retrieval
+│   ├── transaction_importer.py   # POS data import and processing
+│   ├── video_processor.py        # Video frame processing pipeline
+│   └── zone_manager.py           # Zone-based detection management
+├── config/                       # Store and camera configuration
+│   ├── cameras.json              # Camera definitions
+│   ├── zones.json                # Zone definitions
+│   ├── store_layout.json         # Store layout configuration
+│   ├── store_1_camera_1_layout.json
+│   ├── store_1_camera_2_layout.json
+│   ├── store_1_camera_3_layout.json
+│   ├── store_1_camera_4_layout.json
+│   ├── store_2_camera_1_layout.json
+│   ├── store_2_camera_2_layout.json
+│   ├── store_2_camera_3_layout.json
+│   └── store_2_camera_4_layout.json
+├── dashboard/                    # React frontend (Vite + TypeScript)
+│   ├── src/
+│   │   ├── main.tsx              # App entry point
+│   │   ├── App.tsx               # Root component
+│   │   ├── index.css             # Global styles
+│   │   ├── components/           # UI components
+│   │   │   ├── AnomalyFeed.tsx
+│   │   │   ├── ErrorBoundary.tsx
+│   │   │   ├── FunnelChart.tsx
+│   │   │   ├── KPICards.tsx
+│   │   │   ├── OccupancyChart.tsx
+│   │   │   └── SalespersonLeaderboard.tsx
+│   │   ├── hooks/                # Custom React hooks
+│   │   │   ├── usePolling.ts
+│   │   │   └── useWebSocket.ts
+│   │   └── types/
+│   │       └── api.ts            # TypeScript type definitions
 │   ├── Dockerfile
-│   └── package.json
-├── docker-compose.yml        # Defines all services (api, worker, detection, kafka, redis, etc.)
-├── .env.example              # Template environment variables
-├── requirements.txt          # Base Python dependencies (for development)
-└── README.md                 # This file
+│   ├── nginx.conf                # Nginx configuration for production
+│   ├── package.json
+│   ├── vite.config.ts
+│   ├── tsconfig.json
+│   ├── tsconfig.node.json
+│   ├── tailwind.config.js
+│   └── postcss.config.js
+├── tests/                        # Test suite
+│   ├── __init__.py
+│   ├── conftest.py               # Shared test fixtures
+│   ├── unit/                     # Unit tests
+│   │   ├── __init__.py
+│   │   ├── test_alert_engine.py
+│   │   ├── test_anomaly_detector.py
+│   │   ├── test_conversion_engine.py
+│   │   ├── test_event_store.py
+│   │   ├── test_reentry_tracker.py
+│   │   ├── test_staff_filter.py
+│   │   ├── test_video_processor.py
+│   │   ├── test_zone_detector.py
+│   │   └── test_zone_manager_service.py
+│   └── integration/              # Integration tests
+│       ├── __init__.py
+│       ├── test_api_funnel.py
+│       ├── test_api_metrics.py
+│       └── test_websocket_alerts.py
+├── grafana/                      # Grafana dashboards & provisioning
+│   ├── dashboards/
+│   │   └── store.json            # Pre-built store analytics dashboard
+│   └── provisioning/
+│       ├── dashboards/
+│       └── datasources/
+├── prometheus/                   # Prometheus monitoring config
+│   └── prometheus.yml
+├── docker-compose.yml            # Orchestrates all services (api, 8 workers, kafka, redis, dashboard, prometheus, grafana)
+├── Dockerfile                    # Builds worker service images (YOLOv8 video processing)
+├── Dockerfile.api                # Builds the FastAPI service image
+├── entrypoint.sh                 # API container entrypoint (waits for Redis, seeds data, starts uvicorn)
+├── main.py                       # FastAPI application entry point (routes, lifespan, health check)
+├── .env.example                  # Template environment variables
+├── .gitignore
+├── requirements.txt              # Python dependencies for worker Docker image
+├── CHOICES.md                    # Technical decisions documentation
+├── DESIGN.md                     # Design documentation
+└── README.md                     # This file
 ```
 
 ## Demo (10-Minute Verification)

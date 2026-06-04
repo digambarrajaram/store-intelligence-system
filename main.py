@@ -81,7 +81,6 @@ async def lifespan(app: FastAPI):
     config_path = os.getenv("CAMERA_CONFIG_PATH", "/app/config/cameras.json")
 
     app.state.redis = aioredis.from_url(f"redis://{redis_host}:{redis_port}", decode_responses=True)
-    app.state.sync_redis = None
 
     app.state.camera_config = load_camera_config(config_path)
     app.state.store_ids = [s.get("store_id") for s in app.state.camera_config.get("stores", [])]

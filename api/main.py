@@ -36,7 +36,6 @@ async def lifespan(app: FastAPI):
     config_path = os.getenv("CAMERA_CONFIG_PATH", "/app/config/cameras.json")
 
     app.state.redis = aioredis.from_url(f"redis://{redis_host}:{redis_port}", decode_responses=True)
-    app.state.sync_redis = None  # Will be set by the debug router if needed
 
     # Load camera config and store in app state
     app.state.camera_config = load_camera_config(config_path)
