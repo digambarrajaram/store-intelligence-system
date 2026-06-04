@@ -134,7 +134,12 @@ async def main():
         try:
             producer = AIOKafkaProducer(
                 bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
-                value_serializer=lambda v: json.dumps(v).encode('utf-8')
+                value_serializer=lambda v: json.dumps(v).encode('utf-8'),
+                request_timeout_ms=30000,
+                retry_backoff_ms=1000,
+                acks=1,
+                max_batch_size=16384,
+                linger_ms=100
             )
             await producer.start()
             print(f"Kafka producer connected on attempt {attempt + 1}")
